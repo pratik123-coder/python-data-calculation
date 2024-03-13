@@ -1,0 +1,7 @@
+Top 2 winning streaks
+617) No. of Trades: 6 Start Date - End Date: 2020-12-30 14:30:00 - 2020-10-05 11:05:00 Pnl of Streak: 18232.499999999996
+493) No. of Trades: 5 Start Date - End Date: 2020-11-10 10:58:00 - 2020-09-28 10:48:00 Pnl of Streak: 17137.499999999996
+
+Top 2 losing streaks
+349) No. of Trades: 23 Start Date - End Date: 2020-10-07 09:52:00 - 2020-10-07 12:45:00 Pnl of Streak: -13945.000000000004
+96) No. of Trades: 18 Start Date - End Date: 2021-01-08 10:42:00 - 2020-10-27 11:40:00 Pnl of Streak: -13892.500000000004

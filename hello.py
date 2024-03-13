@@ -31,11 +31,40 @@ def calculate(combined_data):
         file.write(f'Profit Trades: {profit_trades}\n')
         file.write(f'Loss Trades: {loss_trades}\n')
 
+def calculate_streaks(combined_data, n):
+    combined_data['Pnl_Sign'] = combined_data['Pnl'].apply(lambda x: 'Win' if x > 0 else 'Lose')
+    combined_data['Streak_Group'] = (combined_data['Pnl_Sign'] != combined_data['Pnl_Sign'].shift()).cumsum()
+    streaks = combined_data.groupby(['Pnl_Sign', 'Streak_Group']).agg(
+        No_of_Trades=('Pnl_Sign', 'count'),
+        Start_Date=('ExitTime', 'first'),
+        End_Date=('ExitTime', 'last'),
+        Pnl_of_Streak=('Pnl', 'sum')
+    ).reset_index()
+
+    top_winning_streaks = streaks[streaks['Pnl_Sign'] == 'Win'].nlargest(n, 'Pnl_of_Streak')
+    top_losing_streaks = streaks[streaks['Pnl_Sign'] == 'Lose'].nsmallest(n, 'Pnl_of_Streak')
+
+    with open('combined_winning_losing.txt', 'w') as file:
+        file.write('Top {} winning streaks\n'.format(n))
+        for i, row in top_winning_streaks.iterrows():
+            file.write(f"{i + 1}) No. of Trades: {row['No_of_Trades']} "
+                       f"Start Date - End Date: {row['Start_Date']} - {row['End_Date']} "
+                       f"Pnl of Streak: {row['Pnl_of_Streak']}\n")
+
+        file.write('\nTop {} losing streaks\n'.format(n))
+        for i, row in top_losing_streaks.iterrows():
+            file.write(f"{i + 1}) No. of Trades: {row['No_of_Trades']} "
+                       f"Start Date - End Date: {row['Start_Date']} - {row['End_Date']} "
+                       f"Pnl of Streak: {row['Pnl_of_Streak']}\n")
+
+
 
 folder_path = '/Users/pratikmohanty/Desktop/python/SampleData/SampleData'
 # Give your Folder Path
 merge(folder_path)
+n = int(input("Enter the value of n: "))
 
 combined_data = pd.read_csv('combined_closePosition.csv')
 calculate(combined_data)
+calculate_streaks(combined_data, n)
 
